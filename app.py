@@ -51,7 +51,7 @@ else:
             klassifikation_label = f"Art. {int(user_klassifikation)}"
 
             st.markdown(f"""
-                <div style='background-color:#1f77b4; padding: 15px; border-radius: 5px; width: fit-content;'>
+                <div style='background-color:#00a0de; padding: 15px; border-radius: 5px; width: fit-content;'>
                     <h4 style='color: white;'>Daten zur ISIN {user_isin}</h4>
                     <p style='color: white;'>Klassifikation: {klassifikation_label}</p>
                     <ul style='color: white;'>
@@ -69,14 +69,6 @@ else:
                 median_val = subset[column].median()
                 percentile = (subset[column] < user_value).mean() * 100
                 num_values = subset[column].count()
-
-                stats = [
-                    f"Wert zur ISIN: {user_value}",
-                    f"Anzahl ISINs Peergroup: {num_values}",
-                    f"Mittelwert: {mean_val:.2f}",
-                    f"Median: {median_val:.2f}",
-                    f"{percentile:.1f}% der Werte sind kleiner"
-                ]
 
                 col1, col2 = st.columns([3, 1])
 
@@ -103,12 +95,12 @@ else:
                     image.save(image_path)
                     c.drawString(2 * cm, 27 * cm, f"Analyse zur ISIN: {user_isin}")
                     c.drawString(2 * cm, 26.5 * cm, f"{column}:")
-                    c.drawImage(image_path, 2 * cm, 15 * cm, width=12 * cm, height=6 * cm)
+                    c.drawImage(image_path, 2 * cm, 15 * cm, width=13.8 * cm, height=6.9 * cm)
 
                     # Grauer Kasten rechts neben dem Diagramm
-                    info_x = 15 * cm
-                    info_y = 15 * cm
-                    c.setFillColorRGB(0.94, 0.94, 0.94)
+                    info_x = 15.9 * cm
+                    info_y = 21.9 * cm
+                    c.setFillColorRGB(0.97, 0.97, 0.97)
                     c.rect(info_x, info_y, 5.5 * cm, 6 * cm, fill=1, stroke=0)
                     c.setFillColorRGB(0, 0, 0)
                     c.setFont("Helvetica", 8)
@@ -117,19 +109,31 @@ else:
                         c.drawString(info_x + 0.3 * cm, line_y, stat)
                         line_y -= 0.6 * cm
 
+                    stats = [
+                        f"Wert zur ISIN: {user_value}",
+                        f"Anzahl ISINs Peergroup: {num_values}",
+                        f"Mittelwert: {mean_val:.2f}",
+                        f"Median: {median_val:.2f}",
+                        f"{percentile:.1f}% der Werte sind kleiner"
+                    ]
+                    
+
                     c.showPage()
 
                 with col2:
-                    st.markdown(f"""
-                    <div style='background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-top: 5px;'>
-                        <strong>ISIN:</strong> {user_isin}<br>
-                        <strong>{column}:</strong> {user_value}<br>
-                        <strong>Anzahl ISINs Peergroup:</strong> {num_values}<br>
-                        <strong>Mittelwert:</strong> {mean_val:.1f}<br>
-                        <strong>Median:</strong> {median_val:.1f}<br>
-                        <strong>{percentile:.1f}%</strong> der Werte sind kleiner als der ISIN-Wert
-                    </div>
-                    """, unsafe_allow_html=True)
+                    pass
+
+                # Separater Legendenkasten unterhalb (rechts)
+                st.markdown(f"""
+                <div style='background-color: transparent; border: 1px solid black; padding: 10px; border-radius: 5px; margin-top: 5px; width: 250px;'>
+                    <strong>ISIN:</strong> {user_isin}<br>
+                    <strong>{column}:</strong> {user_value}<br>
+                    <strong>Anzahl ISINs Peergroup:</strong> {num_values}<br>
+                    <strong>Mittelwert:</strong> {mean_val:.1f}<br>
+                    <strong>Median:</strong> {median_val:.1f}<br>
+                    <strong>{percentile:.1f}%</strong> der Werte sind kleiner als der ISIN-Wert
+                </div>
+                """, unsafe_allow_html=True)
 
             c.save()
             pdf_buffer.seek(0)
@@ -139,3 +143,4 @@ else:
                 file_name=f"{user_isin}_analyse.pdf",
                 mime="application/pdf"
             )
+
